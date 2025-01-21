@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Preços</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-image: url(3dcf6dcd86cc89405d868be9789b67df.jpg);
+            background-repeat: repeat-x;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: #dde7f3c9;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .item {
+            margin-bottom: 15px;
+            text-align: center;
+            font-style: italic;
+            font-weight: bold;
+        }
+        .item label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .item input {
+            width: 90%;
+            padding: 5px;
+            font-size: 1em;
+        }
+        .toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .toggle label {
+            margin-left: 10px;
+        }
+        .total {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Preços</h1>
+
+        <div class="toggle">
+            <input type="checkbox" id="parceria-toggle">
+            <label for="parceria-toggle">Parceria</label>
+        </div>
+
+        <div class="item">
+            <label for="adrenalina">Adrenalina</label>
+            <input type="number" id="adrenalina" min="0" value="0">
+        </div>
+        <div class="item">
+            <label for="atadura">Atadura</label>
+            <input type="number" id="atadura" min="0" value="0">
+        </div>
+        <div class="item">
+            <label for="kit-medico">Kit Médico </label>
+            <input type="number" id="kit-medico" min="0" value="0">
+        </div>
+        <div class="item">
+            <label for="bandagem">Bandagem </label>
+            <input type="number" id="bandagem" min="0" value="0">
+        </div>
+        <div class="item">
+            <label for="analgesico">Analgésico </label>
+            <input type="number" id="analgesico" min="0" value="0">
+        </div>
+
+        <div class="total">Total: R$ <span id="total">0.00</span></div>
+    </div>
+
+    <script>
+        const normalPrices = {
+            adrenalina: 8000,
+            atadura: 750,
+            "kit-medico": 2500,
+            bandagem: 500,
+            analgesico: 750
+        };
+
+        const parceriaPrices = {
+            adrenalina: 5000,
+            atadura: 750,
+            "kit-medico": 1500,
+            bandagem: 500,
+            analgesico: 750
+        };
+
+        const maxLimits = {
+            adrenalina: 100,
+            "kit-medico": 100,
+            bandagem: 100,
+            analgesico: 100
+        };
+
+        const inputs = document.querySelectorAll("input[type='number']");
+        const parceriaToggle = document.getElementById("parceria-toggle");
+        const totalDisplay = document.getElementById("total");
+
+        function calculateTotal() {
+            const prices = parceriaToggle.checked ? parceriaPrices : normalPrices;
+            let total = 0;
+
+            inputs.forEach(input => {
+                const id = input.id;
+                const quantity = Math.min(Number(input.value), maxLimits[id] || Infinity);
+                total += quantity * prices[id];
+            });
+
+            totalDisplay.textContent = total.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+        }
+
+        inputs.forEach(input => {
+            input.addEventListener("input", calculateTotal);
+        });
+
+        parceriaToggle.addEventListener("change", calculateTotal);
+
+        calculateTotal();
+    </script>
+</body>
+</html>
